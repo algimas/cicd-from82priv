@@ -41,11 +41,16 @@ jobs:
           nowPassword: ${{ secrets.SN_PASSWORD }}
           nowSourceInstance: ${{ secrets.SN_DEV_INSTANCE }}
           appSysID: ${{ secrets.SN_APP_SYSID }}
-          
+       
     # This is required to pass the version number output from Publish App 
     # to the input for Install App in the next job! This is because the jobs 
     # run on different Linux instances, so without this Install App won't know
     # what to install.
+      - id: version
+        run: |
+          # use bash variable expression to get the substring
+          export PUBLISH_VERSION="${{ steps.publish_app.outputs.newVersion }}"
+          echo "::set-output name=publishversion::${PUBLISH_VERSION}"
     outputs:
       publishversion: ${{ steps.publish_app.outputs.newVersion }}
 
